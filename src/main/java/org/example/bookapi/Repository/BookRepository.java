@@ -5,4 +5,6 @@ import org.example.bookapi.entity.Book;
 
 public interface BookRepository extends BasicRepository<Book, Long> {
 
+    <S extends Book> S save(S entity);
+
 }
