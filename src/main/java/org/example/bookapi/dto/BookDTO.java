@@ -39,4 +39,8 @@ public class BookDTO {
     public int releaseYear() {
         return publicationDate.getYear();
     }
+
+    public LocalDate getPublished() {
+        return publicationDate;
+    }
 }

@@ -59,4 +59,9 @@ public class Book implements Comparable<Book> {
     public Object getYear() {
         return year;
     }
+
+
+    public LocalDate getPublished() {
+        return publicationDate;
+    }
 }
