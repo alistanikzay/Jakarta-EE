@@ -1,4 +1,4 @@
-package org.example.bookapi.mapper;
+package org.example.bookapi.Mapper;
 
 import org.example.bookapi.Exception.ValidationException;
 import org.example.bookapi.dto.CreateBookDTO;
