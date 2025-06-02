@@ -5,7 +5,7 @@ import org.example.bookapi.dto.BookDTO;
 import org.example.bookapi.dto.CreateBookDTO;
 import org.example.bookapi.dto.UpdateBookDTO;
 import org.example.bookapi.entity.Book;
-import org.example.bookapi.mapper.BookMapper;
+import org.example.bookapi.Mapper.BookMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
