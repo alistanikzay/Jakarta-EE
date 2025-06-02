@@ -175,6 +175,33 @@ class BookMapperTest {
         assertEquals("De kommer att drunkna i sina mödrars tårar", existingBook.getTitle());
     }
 
+    @Test
+    @DisplayName("Map to entity update should update title when it is not null")
+    void shouldUpdateTitleWhenNotNullInUpdateDto() {
+        Book existingBook = new Book(
+                1L,
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+
+        UpdateBookDTO updateBookDTO = new UpdateBookDTO(
+                "De drunknade", // ny titel som inte är null
+                "Johannes Anyuru",
+                "Reviderad beskrivning",
+                LocalDate.of(2023, 5, 15),
+                "1112223334"
+        );
+
+        BookMapper.updateEntity(updateBookDTO, existingBook);
+
+        // Förväntat: titeln ska uppdateras
+        assertEquals("De drunknade", existingBook.getTitle());
+    }
+
+
 
 
 
