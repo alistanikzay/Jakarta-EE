@@ -11,7 +11,6 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    // Getters & Setters
     public String getError() {
         return error;
     }

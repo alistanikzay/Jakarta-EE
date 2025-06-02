@@ -28,7 +28,6 @@ public class Book implements Comparable<Book> {
         this.publicationDate = LocalDate.now();
     }
 
-    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -59,7 +58,6 @@ public class Book implements Comparable<Book> {
     public Object getYear() {
         return year;
     }
-
 
     public LocalDate getPublished() {
         return publicationDate;

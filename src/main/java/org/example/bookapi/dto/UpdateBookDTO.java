@@ -23,7 +23,7 @@ public class UpdateBookDTO {
     @Pattern(regexp = "^(\\d{10}|\\d{13})$", message = "ISBN must be 10 or 13 digits")
     private String isbn;
 
-    // Constructors
+
     public UpdateBookDTO() {}
 
     public UpdateBookDTO(String title, String author, String description, LocalDate publicationDate, String isbn) {
@@ -34,7 +34,7 @@ public class UpdateBookDTO {
         this.isbn = isbn;
     }
 
-    // Getters and Setters
+
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
 
@@ -50,7 +50,6 @@ public class UpdateBookDTO {
     public String getIsbn() { return isbn; }
     public void setIsbn(String isbn) { this.isbn = isbn; }
 
-    // Extra methods (optional)
     public String title() { return title; }
     public String author() { return author; }
     public int year() { return publicationDate != null ? publicationDate.getYear() : 0; }

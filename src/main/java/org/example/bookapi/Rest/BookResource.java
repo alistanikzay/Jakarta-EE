@@ -20,7 +20,7 @@ public class BookResource {
     private BookService bookService;
 
     public BookResource() {
-        // Här sker den manuella "dependency injection"
+
         this.bookService = new BookServiceImpl(new InMemoryBookRepository());
     }
 
