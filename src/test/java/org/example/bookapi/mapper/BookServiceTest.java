@@ -68,6 +68,42 @@ public class BookServiceTest {
         assertEquals("Book not found", exception.getMessage());
     }
 
+    @Test
+    @DisplayName("getAll should return list of BookDTOs")
+    void getAllShouldReturnListOfBookDTOs() {
+        // Arrange
+        Book book1 = new Book(
+                1L,
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman om identitet, framtid och politik",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+        book1.setLanguage("Svenska");
+
+        Book book2 = new Book(
+                2L,
+                "Aniara",
+                "Harry Martinson",
+                "Ett rymdepos om en skeppsresa utan mål",
+                LocalDate.of(1956, 1, 1),
+                "9789100123456"
+        );
+        book2.setLanguage("Svenska");
+
+        when(bookRepository.findAll()).thenReturn(java.util.stream.Stream.of(book1, book2));
+
+        // Act
+        var result = bookService.getAll();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        assertEquals("Johannes Anyuru", result.get(0).author());
+        assertEquals("Harry Martinson", result.get(1).author());
+    }
 
 
 
