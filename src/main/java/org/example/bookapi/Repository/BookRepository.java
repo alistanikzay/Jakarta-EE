@@ -13,4 +13,6 @@ public interface BookRepository extends BasicRepository<Book, Long> {
     List<Book> findByTitleContainingIgnoreCase(String title);
 
     List<Book> findByAuthorContainingIgnoreCaseAndTitleContainingIgnoreCase(String author, String title);
+
+
 }
