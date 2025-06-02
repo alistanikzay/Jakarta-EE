@@ -22,4 +22,6 @@ public record CreateBookDTO(
 
         @Pattern(regexp = "^(\\d{10}|\\d{13})$", message = "ISBN must be 10 or 13 digits")
         String isbn
-) {}
+) {
+
+}
