@@ -14,6 +14,7 @@ public class Book implements Comparable<Book> {
     private LocalDate publicationDate;
     private String isbn;
     private String genre;
+    private String language; // NYTT FÄLT
 
     // Konstruktor med genre
     public Book(Long id, String title, String author, String description,
@@ -26,6 +27,16 @@ public class Book implements Comparable<Book> {
         this.isbn = isbn;
         this.genre = genre;
     }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+
 
     // Extra konstruktor utan genre (genre sätts till null)
     public Book(Long id, String title, String author, String description,

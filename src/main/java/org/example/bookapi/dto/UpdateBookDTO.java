@@ -21,6 +21,7 @@ public record UpdateBookDTO(
 
         @Pattern(regexp = "^(\\d{10}|\\d{13})$", message = "ISBN must be 10 or 13 digits")
         String isbn
+
 ) {
     public int year() {
         return publicationDate != null ? publicationDate.getYear() : 0;

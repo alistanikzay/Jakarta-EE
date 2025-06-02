@@ -305,6 +305,34 @@ class BookMapperTest {
         assertEquals("9998887776", existingBook.getIsbn());
     }
 
+    @Test
+    @DisplayName("Map to entity update should not update language when it is null")
+    void shouldNotUpdateLanguageWhenNullInUpdateDto() {
+        Book existingBook = new Book(
+                1L,
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+        existingBook.setLanguage("Svenska");
+
+        UpdateBookDTO updateBookDTO = new UpdateBookDTO(
+                "Ny titel",
+                "Ny författare",
+                "Ny beskrivning",
+                LocalDate.of(2020, 1, 1),
+                "1234567890"
+                // language saknas eller sätts till null
+        );
+
+        BookMapper.updateEntity(updateBookDTO, existingBook);
+
+        assertEquals("Svenska", existingBook.getLanguage());
+    }
+
+
 
 
 
