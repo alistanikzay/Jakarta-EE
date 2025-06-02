@@ -39,11 +39,12 @@ public class BookMapper {
         }
         if (updateBook == null || book == null) return;
 
-        if (updateBook.title() != null) book.setTitle(updateBook.title());
-        if (updateBook.author() != null) book.setAuthor(updateBook.author());
-        if (updateBook.description() != null) book.setDescription(updateBook.description());
-        if (updateBook.publicationDate() != null) book.setPublicationDate(updateBook.publicationDate());
-        if (updateBook.isbn() != null) book.setIsbn(updateBook.isbn());
+        if (updateBook.getTitle() != null) book.setTitle(updateBook.getTitle());
+        if (updateBook.getAuthor() != null) book.setAuthor(updateBook.getAuthor());
+        if (updateBook.getDescription() != null) book.setDescription(updateBook.getDescription());
+        if (updateBook.getPublicationDate() != null) book.setPublicationDate(updateBook.getPublicationDate());
+        if (updateBook.getIsbn() != null) book.setIsbn(updateBook.getIsbn());
+        if (updateBook.getLanguage() != null) book.setLanguage(updateBook.getLanguage());
     }
 
     public static BookDTO mapToResponse(Book book) {
