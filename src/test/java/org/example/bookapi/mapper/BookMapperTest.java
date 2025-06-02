@@ -253,5 +253,34 @@ class BookMapperTest {
         assertEquals("Reviderad beskrivning", existingBook.getDescription());
     }
 
+    @Test
+    @DisplayName("Map to entity update should not update ISBN when it is null")
+    void shouldNotUpdateIsbnWhenNullInUpdateDto() {
+        Book existingBook = new Book(
+                1L,
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075" // original ISBN
+        );
+
+        UpdateBookDTO updateBookDTO = new UpdateBookDTO(
+                "Ny titel",
+                "Ny författare",
+                "Ny beskrivning",
+                LocalDate.of(2020, 1, 1),
+                null // ISBN är null
+        );
+
+        BookMapper.updateEntity(updateBookDTO, existingBook);
+
+        // ISBN ska vara oförändrad
+        assertEquals("9789113084075", existingBook.getIsbn());
+    }
+
+
+
+
 
 }
