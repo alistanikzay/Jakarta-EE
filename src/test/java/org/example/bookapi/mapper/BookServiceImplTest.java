@@ -292,5 +292,43 @@ public class BookServiceImplTest {
         verify(bookRepository, never()).save(any(Book.class));
     }
 
+    @Test
+    @DisplayName("update should throw DatabaseException if database fails during update")
+    void updateShouldThrowDatabaseExceptionIfDatabaseFailsDuringUpdate() {
+        // Arrange
+        Long bookId = 1L;
+
+        Book existingBook = new Book(
+                bookId,
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman om identitet, framtid och politik",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+        existingBook.setLanguage("Svenska");
+
+        UpdateBookDTO updateDTO = new UpdateBookDTO(
+                "Ny titel",
+                "Ny författare",
+                "Uppdaterad beskrivning",
+                LocalDate.of(2022, 2, 2),
+                "1234567890"
+        );
+
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(existingBook));
+        when(bookRepository.save(any(Book.class))).thenThrow(new PersistenceException("DB error"));
+
+        // Act & Assert
+        DatabaseException exception = assertThrows(DatabaseException.class, () -> bookService.update(bookId, updateDTO));
+        assertEquals("A database error occurred during update book", exception.getMessage());
+
+        verify(bookRepository, times(1)).findById(bookId);
+        verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
+
+
+
 
 }
