@@ -329,8 +329,8 @@ public class BookServiceImplTest {
     }
 
     @Test
-    @DisplayName("Delete book should return OK when book is successfully deleted")
-    void deleteBookShouldReturnOkWhenBookSuccessfullyDeleted() {
+    @DisplayName("Delete book should delete the book when it exists")
+    void deleteBookShouldDeleteBookWhenExists() {
         Long bookId = 1L;
         Book book = new Book(
                 bookId,
@@ -344,12 +344,11 @@ public class BookServiceImplTest {
 
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
 
-        Response response = bookService.delete(bookId);
+        bookService.delete(bookId);
 
         verify(bookRepository).delete(book);
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertEquals("{message=Book with ID 1 was successfully deleted.}", response.getEntity().toString());
     }
+
 
 
 }
