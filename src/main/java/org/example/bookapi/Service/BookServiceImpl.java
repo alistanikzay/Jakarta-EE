@@ -1,5 +1,6 @@
 package org.example.bookapi.Service;
 
+import org.example.bookapi.Exception.ConflictException;
 import org.example.bookapi.Repository.BookRepository;
 import org.example.bookapi.dto.BookDTO;
 import org.example.bookapi.dto.CreateBookDTO;
@@ -29,10 +30,22 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDTO create(CreateBookDTO dto) {
+        boolean exists = bookRepository.findAll()
+                .anyMatch(book ->
+                        book.getTitle().equalsIgnoreCase(dto.title())
+                                && book.getAuthor().equalsIgnoreCase(dto.author())
+                );
+
+        if (exists) {
+            throw new ConflictException("A book with title: '" + dto.title() +
+                    "' and author: '" + dto.author() + "' already exists.");
+        }
+
         Book book = BookMapper.toEntity(dto);
         Book saved = bookRepository.save(book);
         return BookMapper.toDTO(saved);
     }
+
 
     @Override
     public BookDTO update(Long id, UpdateBookDTO dto) {
