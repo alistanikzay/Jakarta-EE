@@ -170,6 +170,35 @@ public class BookServiceImplTest {
         verify(bookRepository, never()).save(any(Book.class));
     }
 
+    @Test
+    @DisplayName("create should throw ConflictException if ISBN already exists")
+    void createShouldThrowConflictExceptionIfIsbnAlreadyExists() {
+        // Arrange
+        CreateBookDTO createBookDTO = new CreateBookDTO(
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman om identitet, framtid och politik",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+
+        Book existingBook = new Book(
+                2L,
+                "Annan bok med samma ISBN",
+                "Annan författare",
+                "Beskrivning",
+                LocalDate.of(2020, 1, 1),
+                "9789113084075"
+        );
+
+        when(bookRepository.findAll()).thenReturn(java.util.stream.Stream.of(existingBook));
+
+        // Act & Assert
+        ConflictException exception = assertThrows(ConflictException.class, () -> bookService.create(createBookDTO));
+        assertEquals("A book with ISBN: '9789113084075' already exists.", exception.getMessage());
+
+        verify(bookRepository, never()).save(any(Book.class));
+    }
 
 
 }
