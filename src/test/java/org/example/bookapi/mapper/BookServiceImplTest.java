@@ -269,7 +269,28 @@ public class BookServiceImplTest {
         verify(bookRepository, times(1)).save(any(Book.class));
     }
 
+    @Test
+    @DisplayName("update should throw NotFoundException if book with given ID does not exist")
+    void updateShouldThrowNotFoundExceptionIfBookDoesNotExist() {
+        // Arrange
+        Long missingBookId = 42L;
 
+        UpdateBookDTO updateDTO = new UpdateBookDTO(
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Uppdaterad beskrivning av boken",
+                LocalDate.of(2020, 1, 1),
+                "9789113084075"
+        );
+
+        when(bookRepository.findById(missingBookId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> bookService.update(missingBookId, updateDTO));
+        assertEquals("Book not found", exception.getMessage());
+
+        verify(bookRepository, never()).save(any(Book.class));
+    }
 
 
 }
