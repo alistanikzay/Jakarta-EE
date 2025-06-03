@@ -30,7 +30,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDTO create(CreateBookDTO dto) {
-        boolean titleAuthorExists = bookRepository.findAll()
+        // Hämta alla böcker en gång och spara i en lista
+        List<Book> existingBooks = bookRepository.findAll().toList();
+
+        // Kontrollera om bok med samma titel och författare redan finns
+        boolean titleAuthorExists = existingBooks.stream()
                 .anyMatch(book ->
                         book.getTitle().equalsIgnoreCase(dto.title()) &&
                                 book.getAuthor().equalsIgnoreCase(dto.author())
@@ -41,7 +45,8 @@ public class BookServiceImpl implements BookService {
                     "' and author: '" + dto.author() + "' already exists.");
         }
 
-        boolean isbnExists = bookRepository.findAll()
+        // Kontrollera om bok med samma ISBN redan finns
+        boolean isbnExists = existingBooks.stream()
                 .anyMatch(book -> book.getIsbn().equals(dto.isbn()));
 
         if (isbnExists) {
