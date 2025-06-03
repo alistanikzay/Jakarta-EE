@@ -362,7 +362,4 @@ class BookMapperTest {
     }
 
 
-
-
-
 }
