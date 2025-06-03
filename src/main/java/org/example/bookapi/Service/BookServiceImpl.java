@@ -105,9 +105,11 @@ public class BookServiceImpl implements BookService {
     public void delete(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
-        bookRepository.delete(book);
+        try {
+            bookRepository.delete(book);
+        } catch (PersistenceException e) {
+            throw new DatabaseException("A database error occurred during delete book", e);
+        }
     }
-
-
 
 }

@@ -349,6 +349,44 @@ public class BookServiceImplTest {
         verify(bookRepository).delete(book);
     }
 
+    @Test
+    @DisplayName("delete should throw NotFoundException when book does not exist")
+    void deleteShouldThrowNotFoundExceptionWhenBookDoesNotExist() {
+        Long bookId = 42L;
+
+        when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        var exception = assertThrows(RuntimeException.class, () -> bookService.delete(bookId));
+
+        assertEquals("Book not found", exception.getMessage());
+        verify(bookRepository, never()).delete(any());
+    }
+
+    @Test
+    @DisplayName("delete should throw DatabaseException when database delete fails")
+    void deleteBookShouldThrowDatabaseExceptionWhenDeleteFails() {
+        // Arrange
+        Long bookId = 1L;
+        Book book = new Book(
+                bookId,
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman om identitet, framtid och politik",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+        book.setLanguage("Svenska");
+
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+        doThrow(new PersistenceException("DB error")).when(bookRepository).delete(book);
+
+        // Act & Assert
+        DatabaseException exception = assertThrows(DatabaseException.class, () -> bookService.delete(bookId));
+        assertEquals("A database error occurred during delete book", exception.getMessage());
+
+        verify(bookRepository).delete(book);
+    }
+
 
 
 }
