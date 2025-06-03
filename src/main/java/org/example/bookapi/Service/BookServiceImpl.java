@@ -30,22 +30,28 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDTO create(CreateBookDTO dto) {
-        boolean exists = bookRepository.findAll()
+        boolean titleAuthorExists = bookRepository.findAll()
                 .anyMatch(book ->
-                        book.getTitle().equalsIgnoreCase(dto.title())
-                                && book.getAuthor().equalsIgnoreCase(dto.author())
+                        book.getTitle().equalsIgnoreCase(dto.title()) &&
+                                book.getAuthor().equalsIgnoreCase(dto.author())
                 );
 
-        if (exists) {
+        if (titleAuthorExists) {
             throw new ConflictException("A book with title: '" + dto.title() +
                     "' and author: '" + dto.author() + "' already exists.");
+        }
+
+        boolean isbnExists = bookRepository.findAll()
+                .anyMatch(book -> book.getIsbn().equals(dto.isbn()));
+
+        if (isbnExists) {
+            throw new ConflictException("A book with ISBN: '" + dto.isbn() + "' already exists.");
         }
 
         Book book = BookMapper.toEntity(dto);
         Book saved = bookRepository.save(book);
         return BookMapper.toDTO(saved);
     }
-
 
     @Override
     public BookDTO update(Long id, UpdateBookDTO dto) {
