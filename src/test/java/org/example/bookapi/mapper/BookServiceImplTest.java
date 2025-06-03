@@ -7,6 +7,7 @@ import org.example.bookapi.Repository.BookRepository;
 import org.example.bookapi.Service.BookServiceImpl;
 import org.example.bookapi.dto.BookDTO;
 import org.example.bookapi.dto.CreateBookDTO;
+import org.example.bookapi.dto.UpdateBookDTO;
 import org.example.bookapi.entity.Book;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -227,6 +228,47 @@ public class BookServiceImplTest {
 
         verify(bookRepository, times(1)).save(any(Book.class));
     }
+
+    @Test
+    @DisplayName("update book should successfully update existing book")
+    void updateBookShouldSuccessfullyUpdateExistingBook() {
+        // Arrange
+        Long bookId = 1L;
+
+        Book existingBook = new Book(
+                bookId,
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman om identitet, framtid och politik",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+        existingBook.setLanguage("Svenska");
+
+        UpdateBookDTO updateDTO = new UpdateBookDTO(
+                "En annan titel",
+                "En ny författare",
+                "Uppdaterad beskrivning",
+                LocalDate.of(2020, 5, 10),
+                "9789123456789"
+        );
+
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(existingBook));
+        when(bookRepository.save(any(Book.class))).thenReturn(existingBook);
+
+        // Act
+        BookDTO result = bookService.update(bookId, updateDTO);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(updateDTO.getTitle(), result.title());
+        assertEquals(updateDTO.getAuthor(), result.author());
+        assertEquals(updateDTO.getIsbn(), result.isbn());
+
+        verify(bookRepository, times(1)).findById(bookId);
+        verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
 
 
 
