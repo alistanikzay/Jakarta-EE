@@ -1,6 +1,7 @@
 package org.example.bookapi.Service;
 
 import org.example.bookapi.Exception.ConflictException;
+import org.example.bookapi.Exception.DatabaseException;
 import org.example.bookapi.Repository.BookRepository;
 import org.example.bookapi.dto.BookDTO;
 import org.example.bookapi.dto.CreateBookDTO;
@@ -8,6 +9,7 @@ import org.example.bookapi.dto.UpdateBookDTO;
 import org.example.bookapi.entity.Book;
 import org.example.bookapi.Mapper.BookMapper;
 
+import jakarta.persistence.PersistenceException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,14 +21,12 @@ public class BookServiceImpl implements BookService {
         this.bookRepository = bookRepository;
     }
 
-
     @Override
     public BookDTO getById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
         return BookMapper.toDTO(book);
     }
-
 
     @Override
     public BookDTO create(CreateBookDTO dto) {
@@ -53,9 +53,13 @@ public class BookServiceImpl implements BookService {
             throw new ConflictException("A book with ISBN: '" + dto.isbn() + "' already exists.");
         }
 
-        Book book = BookMapper.toEntity(dto);
-        Book saved = bookRepository.save(book);
-        return BookMapper.toDTO(saved);
+        try {
+            Book book = BookMapper.toEntity(dto);
+            Book saved = bookRepository.save(book);
+            return BookMapper.toDTO(saved);
+        } catch (PersistenceException e) {
+            throw new DatabaseException("A database error occurred during create book", e);
+        }
     }
 
     @Override
@@ -77,7 +81,7 @@ public class BookServiceImpl implements BookService {
     public List<BookDTO> getAll() {
         return bookRepository.findAll()
                 .sorted((b1, b2) -> b1.getId().compareTo(b2.getId()))
-                .map(book -> BookMapper.toDTO(book))
+                .map(BookMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -88,7 +92,6 @@ public class BookServiceImpl implements BookService {
                 .map(BookMapper::toDTO)
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public void delete(Long id) {

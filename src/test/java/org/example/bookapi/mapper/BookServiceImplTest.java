@@ -1,6 +1,8 @@
 package org.example.bookapi.mapper;
 
+import jakarta.persistence.PersistenceException;
 import org.example.bookapi.Exception.ConflictException;
+import org.example.bookapi.Exception.DatabaseException;
 import org.example.bookapi.Repository.BookRepository;
 import org.example.bookapi.Service.BookServiceImpl;
 import org.example.bookapi.dto.BookDTO;
@@ -199,6 +201,33 @@ public class BookServiceImplTest {
 
         verify(bookRepository, never()).save(any(Book.class));
     }
+
+    @Test
+    @DisplayName("create should throw DatabaseException if database save fails")
+    void createShouldThrowDatabaseExceptionIfSaveFails() {
+        // Arrange
+        CreateBookDTO createBookDTO = new CreateBookDTO(
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman om identitet, framtid och politik",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+
+        // Anta att inga konflikter finns
+        when(bookRepository.findAll()).thenReturn(java.util.stream.Stream.empty());
+
+        // Simulera att databasen kastar ett undantag
+        when(bookRepository.save(any(Book.class)))
+                .thenThrow(new PersistenceException("DB error"));
+
+        // Act & Assert
+        DatabaseException exception = assertThrows(DatabaseException.class, () -> bookService.create(createBookDTO));
+        assertEquals("A database error occurred during create book", exception.getMessage());
+
+        verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
 
 
 }
