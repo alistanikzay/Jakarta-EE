@@ -72,10 +72,14 @@ public class BookServiceImpl implements BookService {
         book.setPublicationDate(dto.getPublicationDate());
         book.setIsbn(dto.getIsbn());
 
-        Book updatedBook = bookRepository.save(book);
-
-        return BookMapper.toDTO(updatedBook);
+        try {
+            Book updatedBook = bookRepository.save(book);
+            return BookMapper.toDTO(updatedBook);
+        } catch (PersistenceException e) {
+            throw new DatabaseException("A database error occurred during update book", e);
+        }
     }
+
 
     @Override
     public List<BookDTO> getAll() {
