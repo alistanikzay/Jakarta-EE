@@ -9,6 +9,10 @@ import org.example.bookapi.dto.UpdateBookDTO;
 import org.example.bookapi.entity.Book;
 import org.example.bookapi.Mapper.BookMapper;
 
+import jakarta.ws.rs.core.Response;
+import java.util.Map;
+
+
 import jakarta.persistence.PersistenceException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,7 +102,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void delete(Long id) {
-        bookRepository.deleteById(id);
+    public Response delete(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        bookRepository.delete(book);
+
+        return Response.ok(Map.of("message", "Book with ID " + id + " was successfully deleted.")).build();
     }
+
 }

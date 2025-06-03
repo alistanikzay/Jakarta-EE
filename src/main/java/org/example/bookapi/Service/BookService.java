@@ -4,6 +4,7 @@ import org.example.bookapi.dto.BookDTO;
 import org.example.bookapi.dto.CreateBookDTO;
 import org.example.bookapi.dto.UpdateBookDTO;
 
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 public interface BookService {
@@ -11,13 +12,7 @@ public interface BookService {
     BookDTO update(Long id, UpdateBookDTO dto);
     BookDTO getById(Long id);
     List<BookDTO> getAll();
-
     List<BookDTO> findByAuthor(String author);
 
-    void delete(Long id);
-
-
-
-
+    Response delete(Long id);
 }
-

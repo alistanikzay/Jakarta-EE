@@ -1,6 +1,7 @@
 package org.example.bookapi.mapper;
 
 import jakarta.persistence.PersistenceException;
+import jakarta.ws.rs.core.Response;
 import org.example.bookapi.Exception.ConflictException;
 import org.example.bookapi.Exception.DatabaseException;
 import org.example.bookapi.Repository.BookRepository;
@@ -327,8 +328,28 @@ public class BookServiceImplTest {
         verify(bookRepository, times(1)).save(any(Book.class));
     }
 
+    @Test
+    @DisplayName("Delete book should return OK when book is successfully deleted")
+    void deleteBookShouldReturnOkWhenBookSuccessfullyDeleted() {
+        Long bookId = 1L;
+        Book book = new Book(
+                bookId,
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman om identitet, framtid och politik",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+        book.setLanguage("Svenska");
 
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
 
+        Response response = bookService.delete(bookId);
+
+        verify(bookRepository).delete(book);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("{message=Book with ID 1 was successfully deleted.}", response.getEntity().toString());
+    }
 
 
 }
