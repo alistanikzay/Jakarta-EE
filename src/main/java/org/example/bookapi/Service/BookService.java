@@ -4,7 +4,6 @@ import org.example.bookapi.dto.BookDTO;
 import org.example.bookapi.dto.CreateBookDTO;
 import org.example.bookapi.dto.UpdateBookDTO;
 
-import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 public interface BookService {
@@ -14,5 +13,5 @@ public interface BookService {
     List<BookDTO> getAll();
     List<BookDTO> findByAuthor(String author);
 
-    Response delete(Long id);
+    void delete(Long id);  // ← ändrad från Response till void
 }

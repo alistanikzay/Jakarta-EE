@@ -102,13 +102,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Response delete(Long id) {
+    public void delete(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
-
         bookRepository.delete(book);
-
-        return Response.ok(Map.of("message", "Book with ID " + id + " was successfully deleted.")).build();
     }
+
+
 
 }
