@@ -3,9 +3,8 @@ package org.example.bookapi.mapper;
 import org.example.bookapi.Repository.BookRepository;
 import org.example.bookapi.Service.BookServiceImpl;
 import org.example.bookapi.dto.BookDTO;
+import org.example.bookapi.dto.CreateBookDTO;
 import org.example.bookapi.entity.Book;
-import org.example.bookapi.Mapper.BookMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(MockitoExtension.class)
-public class BookServiceTest {
+public class BookServiceImplTest {
 
     @Mock
     private BookRepository bookRepository;
@@ -104,6 +103,42 @@ public class BookServiceTest {
         assertEquals("Johannes Anyuru", result.get(0).author());
         assertEquals("Harry Martinson", result.get(1).author());
     }
+
+    @Test
+    @DisplayName("create should save and return BookDTO when input is valid")
+    void createShouldSaveAndReturnBookDTO() {
+        // Arrange
+        CreateBookDTO createBookDTO = new CreateBookDTO(
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman om identitet, framtid och politik",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+
+        Book bookEntity = new Book(
+                1L,
+                createBookDTO.title(),
+                createBookDTO.author(),
+                createBookDTO.description(),
+                createBookDTO.publicationDate(),
+                createBookDTO.isbn()
+        );
+
+        when(bookRepository.save(any(Book.class))).thenReturn(bookEntity);
+
+        // Act
+        BookDTO result = bookService.create(createBookDTO);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("De kommer att drunkna i sina mödrars tårar", result.title());
+        assertEquals("Johannes Anyuru", result.author());
+        assertEquals("9789113084075", result.isbn());
+
+        verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
 
 
 

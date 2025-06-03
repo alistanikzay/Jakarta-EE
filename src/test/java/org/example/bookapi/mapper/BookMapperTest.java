@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 class BookMapperTest {
 
@@ -359,6 +360,8 @@ class BookMapperTest {
 
         assertEquals("Engelska", existingBook.getLanguage());
     }
+
+
 
 
 
