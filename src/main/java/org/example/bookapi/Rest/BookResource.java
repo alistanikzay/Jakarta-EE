@@ -11,6 +11,7 @@ import org.example.bookapi.dto.CreateBookDTO;
 import org.example.bookapi.dto.UpdateBookDTO;
 
 import java.util.List;
+import java.util.Map;
 
 @Path("/books")
 @Produces(MediaType.APPLICATION_JSON)
@@ -51,6 +52,6 @@ public class BookResource {
     @Path("/{id}")
     public Response deleteBook(@PathParam("id") Long id) {
         bookService.delete(id);
-        return Response.noContent().build();
+        return Response.ok(Map.of("message", "Book with ID " + id + " was successfully deleted.")).build();
     }
 }
