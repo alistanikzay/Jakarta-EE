@@ -57,6 +57,14 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<BookDTO> findByAuthor(String author) {
+        return bookRepository.findAll()
+                .filter(book -> book.getAuthor().equalsIgnoreCase(author))
+                .map(BookMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public void delete(Long id) {
