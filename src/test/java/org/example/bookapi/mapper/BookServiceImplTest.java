@@ -1,5 +1,6 @@
 package org.example.bookapi.mapper;
 
+import org.example.bookapi.Exception.ConflictException;
 import org.example.bookapi.Repository.BookRepository;
 import org.example.bookapi.Service.BookServiceImpl;
 import org.example.bookapi.dto.BookDTO;
@@ -139,6 +140,35 @@ public class BookServiceImplTest {
         verify(bookRepository, times(1)).save(any(Book.class));
     }
 
+    @Test
+    @DisplayName("create should throw ConflictException if book with same title and author already exists")
+    void createShouldThrowConflictExceptionIfBookAlreadyExists() {
+        // Arrange
+        CreateBookDTO createBookDTO = new CreateBookDTO(
+                "De kommer att drunkna i sina mödrars tårar",
+                "Johannes Anyuru",
+                "Roman om identitet, framtid och politik",
+                LocalDate.of(2017, 3, 1),
+                "9789113084075"
+        );
+
+        Book existingBook = new Book(
+                1L,
+                createBookDTO.title(),
+                createBookDTO.author(),
+                createBookDTO.description(),
+                createBookDTO.publicationDate(),
+                createBookDTO.isbn()
+        );
+
+        when(bookRepository.findAll()).thenReturn(java.util.stream.Stream.of(existingBook));
+
+        // Act & Assert
+        ConflictException exception = assertThrows(ConflictException.class, () -> bookService.create(createBookDTO));
+        assertEquals("A book with title: 'De kommer att drunkna i sina mödrars tårar' and author: 'Johannes Anyuru' already exists.", exception.getMessage());
+
+        verify(bookRepository, never()).save(any(Book.class));
+    }
 
 
 
